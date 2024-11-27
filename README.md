@@ -89,40 +89,6 @@ Run `stop.sh` to stop capturing snapshots, create a timelapse video, and clean u
 
 ---
 
-### **4. Integration with OctoPrint**
-To automate timelapse creation for each 3D print, you can use the **Event Manager** in OctoPrint to trigger these scripts.
-
-#### **Setup in OctoPrint**
-1. Open **Settings** in OctoPrint.
-2. Go to **Tools** > **Event Manager** > **Add Event**.
-3. Add the following events:
-
-**Event 1: Start Timelapse**
-- **Name**: Start Timelapse  
-- **Event(s)**: `PrintStarted`  
-- **Command**:  
-  ```bash
-  ~/timelapse/start.sh ~/timelapse/config.txt
-  ```
-- **Type**: System  
-- **Enabled**: Check  
-
-**Event 2: Stop Timelapse**
-- **Name**: Stop Timelapse  
-- **Event(s)**: `PrintCancelled`, `PrintDone`, `PrintFailed`  
-- **Command**:  
-  ```bash
-  ~/timelapse/stop.sh ~/timelapse/config.txt
-  ```
-- **Type**: System  
-- **Enabled**: Check  
-
-#### **How It Works in OctoPrint**
-- When a print starts, OctoPrint triggers the `start.sh` script to begin capturing snapshots.
-- When the print completes, is canceled, or fails, OctoPrint triggers the `stop.sh` script to stop the snapshot process, create the timelapse video, and clean up.
-
----
-
 ## **Output Organization**
 
 ### **Snapshots**
@@ -162,6 +128,40 @@ To automate timelapse creation for each 3D print, you can use the **Event Manage
 
 4. **Integration with OctoPrint**:
    - Automates the entire process during print jobs.
+
+---
+
+## **Integration with OctoPrint**
+To automate timelapse creation for each 3D print, you can use the **Event Manager** in OctoPrint to trigger these scripts.
+
+### **Setup in OctoPrint**
+1. Open **Settings** in OctoPrint.
+2. [Go to **Event Manager** > **Add Event**](https://github.com/jpfranca-br/timelapse/blob/main/img/01%20-%20octoprint-event_manager.png).
+3. Add the following events:
+
+[**Event 1: Start Timelapse**](https://github.com/jpfranca-br/timelapse/blob/main/img/02%20-%20octoprint-start_timelapse.png)
+- **Name**: Start Timelapse  
+- **Event(s)**: `PrintStarted`  
+- **Command**:  
+  ```bash
+  ~/timelapse/start.sh ~/timelapse/config.txt
+  ```
+- **Type**: System  
+- **Enabled**: Check  
+
+[**Event 2: Stop Timelapse**](https://github.com/jpfranca-br/timelapse/blob/main/img/03%20-%20octoprint-stop_timelapse.png)
+- **Name**: Stop Timelapse  
+- **Event(s)**: `PrintCancelled`, `PrintDone`, `PrintFailed`  
+- **Command**:  
+  ```bash
+  ~/timelapse/stop.sh ~/timelapse/config.txt
+  ```
+- **Type**: System  
+- **Enabled**: Check  
+
+#### **How It Works in OctoPrint**
+- When a print starts, OctoPrint triggers the `start.sh` script to begin capturing snapshots.
+- When the print completes, is canceled, or fails, OctoPrint triggers the `stop.sh` script to stop the snapshot process, create the timelapse video, and clean up.
 
 ---
 
