@@ -7,36 +7,6 @@ This project includes two scripts, `start.sh` and `stop.sh`, along with a config
 
 ---
 
-## **Files**
-
-### **1. `start.sh`**
-- **Purpose**: Captures frames from an RTSP stream at configurable intervals and stores snapshots in a specified directory.
-- **How It Works**:
-  - Reads configurations from `config.txt` (or another specified file).
-  - Uses `ffmpeg` to continuously capture snapshots in the background.
-  - Saves the running process ID (PID) in `/tmp/snapshot_capture.pid`.
-
-### **2. `stop.sh`**
-- **Purpose**: Stops the snapshot capture, creates a timelapse video from the snapshots, and removes the snapshots.
-- **How It Works**:
-  - Reads configurations from `config.txt` (or another specified file).
-  - Stops the running snapshot process using the PID.
-  - Uses `ffmpeg` to create a timelapse video in a specified directory.
-  - Deletes the snapshots after the video is created.
-
-### **3. `config.txt`**
-- **Purpose**: Stores configuration values for the scripts.
-- **Structure**:
-  ```bash
-  rtsp=rtsp://<user>:<password>@<ip>/live  # RTSP stream URL
-  snapshot_per_second=0.1                  # Frame capture rate (frames per second)
-  output_video_fps=6                       # Frame rate of the output video
-  snaps_dir=~/snaps                        # Directory for storing snapshots
-  video_dir=~/videos                       # Directory for saving the final video
-  ```
-
----
-
 ## **Dependencies**
 
 ### **1. System Dependencies**
@@ -54,6 +24,22 @@ This project includes two scripts, `start.sh` and `stop.sh`, along with a config
 ### **2. OctoPrint (Optional)**
 - Designed for integration with OctoPrint to automate timelapse creation for 3D prints.
 - Requires the Event Manager plugin (built-in in OctoPrint).
+
+---
+
+## **How to Install**
+1. Clone or download the repository:
+   ```bash
+   git clone https://github.com/jpfranca-br/timelapse.git
+   cd timelapse
+   ```
+
+2. Make the scripts executable:
+   ```bash
+   chmod +x start.sh stop.sh
+   ```
+
+3. Ensure `config.txt` is properly configured before running the scripts.
 
 ---
 
@@ -142,6 +128,7 @@ To automate timelapse creation for each 3D print, you can use the **Event Manage
 ### **Snapshots**
 - Saved in the directory specified in `snaps_dir` in `config.txt`.
 - Example: `~/snaps`
+- Smapshots deleted after timelapse video is created
 
 ### **Videos**
 - Timelapse videos are saved in the directory specified in `video_dir` in `config.txt`.
