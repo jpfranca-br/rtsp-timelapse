@@ -1,0 +1,5 @@
+rtsp=rtsp://rtspstream:43c4a407fe60eaafa67c48b24d29c496@zephyr.rtsp.stream/pattern
+snapshot_per_second=1
+output_video_fps=6
+snaps_dir=~/snaps
+video_dir=~/videos
