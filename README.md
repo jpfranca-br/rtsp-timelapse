@@ -30,6 +30,7 @@ This project includes two scripts, `start.sh` and `stop.sh`, along with a config
 ## **How to Install**
 1. Clone or download the repository:
    ```bash
+   cd ~
    git clone https://github.com/jpfranca-br/timelapse.git
    cd timelapse
    ```
