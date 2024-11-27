@@ -68,9 +68,9 @@ Edit `config.txt` to include:
 
 Example:
 ```bash
-rtsp=rtsp://user:pass@192.168.0.150/live
+rtsp=rtsp://rtspstream:43c4a407fe60eaafa67c48b24d29c496@zephyr.rtsp.stream/pattern
 snapshot_per_second=1
-output_video_fps=30
+output_video_fps=6
 snaps_dir=~/snaps
 video_dir=~/videos
 ```
@@ -147,7 +147,7 @@ To automate timelapse creation for each 3D print, you can use the **Event Manage
 - Timelapse videos are saved in the directory specified in `video_dir` in `config.txt`.
 - Example:
   ```bash
-  ~/videos/output_video_<YYYY-MM-DD_HH-MM-SS>.mp4
+  ~/videos/timelapse_<YYYY-MM-DD_HH-MM-SS>.mp4
   ```
 
 ---
@@ -156,11 +156,11 @@ To automate timelapse creation for each 3D print, you can use the **Event Manage
 
 1. **Configure `config.txt`**:
    ```bash
-   rtsp=rtsp://user:pass@192.168.0.150/live
-   snapshot_per_second=0.5
-   output_video_fps=15
-   snaps_dir=~/octoprint_snaps
-   video_dir=~/octoprint_timelapses
+   rtsp=rtsp://rtspstream:43c4a407fe60eaafa67c48b24d29c496@zephyr.rtsp.stream/pattern
+   snapshot_per_second=1
+   output_video_fps=6
+   snaps_dir=~/snaps
+   video_dir=~/videos
    ```
 
 2. **Start Capturing**:
