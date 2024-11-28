@@ -3,6 +3,7 @@
 # Get the configuration file from the argument, default to ./config.txt
 CONFIG_FILE=${1:-./config.txt}
 PID_FILE=/tmp/snapshot_capture.pid
+STOP_FILE=/tmp/snapshot_capture_stop.flag
 
 # Function to read configuration values
 read_config() {
@@ -27,15 +28,29 @@ VIDEO_DIR=$(eval echo "$VIDEO_DIR")
 mkdir -p "$VIDEO_DIR"
 
 # Check if the snapshot capture is running
-if [ ! -f "$PID_FILE" ] || ! kill -0 "$(cat $PID_FILE)" 2>/dev/null; then
-  echo "No snapshot capture process is running."
-  exit 1
-fi
+#if [ ! -f "$PID_FILE" ] || ! kill -0 "$(cat $PID_FILE)" 2>/dev/null; then
+#  echo "No snapshot capture process is running."
+#  exit 1
+#fi
 
 # Stop the snapshot capture process
-echo "Stopping snapshot capture..."
-kill "$(cat $PID_FILE)" && rm -f "$PID_FILE"
-echo "Snapshot capture stopped."
+#echo "Stopping snapshot capture..."
+#kill "$(cat $PID_FILE)" && rm -f "$PID_FILE"
+#echo "Snapshot capture stopped."
+
+# Check if the snapshot capture is running
+if [ -f "$PID_FILE" ] && kill -0 "$(cat $PID_FILE)" 2>/dev/null; then
+  echo "Snapshot capture process $(cat $PID_FILE) is running. Stopping it..."
+  echo "Stop" > $STOP_FILE
+  # Stop the snapshot capture process
+  kill "$(cat $PID_FILE)" && rm -f "$PID_FILE"
+  echo "Snapshot capture stopped."
+else
+  echo "No snapshot capture process is running."
+fi
+
+# Continue with the script logic here
+echo "Proceeding with the script..."
 
 # Generate a timestamp for the video
 TIMESTAMP=$(date +"%Y-%m-%d_%H-%M-%S")
@@ -43,7 +58,8 @@ OUTPUT_VIDEO="$VIDEO_DIR/timelapse_${TIMESTAMP}.mp4"
 
 # Combine snapshots into a video
 echo "Combining snapshots into a video with frame rate: $OUTPUT_VIDEO_FPS fps..."
-ffmpeg -framerate "$OUTPUT_VIDEO_FPS" -i "$SNAPS_DIR/snapshot_%04d.jpg" -c:v libx264 -pix_fmt yuv420p "$OUTPUT_VIDEO" >/dev/null 2>&1
+#ffmpeg -framerate "$OUTPUT_VIDEO_FPS" -i "$SNAPS_DIR/snapshot_%04d.jpg" -c:v libx264 -pix_fmt yuv420p "$OUTPUT_VIDEO" >/dev/null 2>&1
+ffmpeg -framerate "$OUTPUT_VIDEO_FPS" -pattern_type glob -i "$SNAPS_DIR/*.jpg" -c:v libx264 -pix_fmt yuv420p "$OUTPUT_VIDEO" >/dev/null 2>&1
 
 if [ $? -eq 0 ]; then
   echo "Video created successfully at $OUTPUT_VIDEO"
