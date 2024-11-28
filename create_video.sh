@@ -1,4 +1,5 @@
 #!/bin/bash
+export XDG_RUNTIME_DIR=/run/user/$(id -u)
 
 # Get the configuration file from the argument, default to ./config.txt
 CONFIG_FILE=${1:-./config.txt}
