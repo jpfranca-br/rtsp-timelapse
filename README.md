@@ -109,7 +109,7 @@ This project can automate timelapse creation during 3D printing using OctoPrint'
 - **Event(s)**: `PrintStarted`  
 - **Command**:  
   ```bash
-  /path/to/timelapse/start_capture.sh /path/to/timelapse/config.txt
+  /path/to/timelapse/start_capture.sh
   ```
 - **Type**: System  
 - **Enabled**: Check  
