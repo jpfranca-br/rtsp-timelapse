@@ -144,12 +144,3 @@ Example video path:
 ## **Enhanced Reliability**
 - The service is designed to auto-restart in case of interruptions, such as a lost RTSP feed.
 - Systemd handles retries with a delay of 5 seconds between restarts.
-
----
-
-## **Author and License**
-This project is designed for creating reliable timelapses from RTSP streams, with a focus on user flexibility and OctoPrint integration. Use, modify, and distribute freely. 🚀
-
---- 
-
-This version includes the OctoPrint instructions within the same document for user convenience.
