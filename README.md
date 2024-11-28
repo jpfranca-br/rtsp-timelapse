@@ -1,4 +1,4 @@
-### RTSP Timelapse with Improved Service Management
+### RTSP Timelapse for Octoprint Integration
 
 ---
 
