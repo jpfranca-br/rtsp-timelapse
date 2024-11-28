@@ -1,7 +1,3 @@
-Here is the updated README with the **OctoPrint setup steps included** directly in this version:
-
----
-
 ### RTSP Timelapse with Improved Service Management
 
 ---
