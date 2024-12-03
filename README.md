@@ -136,7 +136,3 @@ timelapse_YYYY-MM-DD_HH-MM-SS.mp4
 2. Use `journalctl --user -u timelapse.service` to inspect service logs.
 3. Check if `config.txt` values are correctly set.
 4. Ensure required directories exist and scripts have execute permissions.
-
----
-
-This README incorporates the latest functionality from your scripts and is designed for clear guidance and troubleshooting. Let me know if you'd like further refinements.
