@@ -23,7 +23,7 @@ This project automates the process of capturing timelapses from an RTSP stream u
 ### **System Requirements**
 - **FFmpeg**: Required for snapshots and video creation.
     ```bash
-    sudo apt update && sudo apt install git ffmpeg
+    sudo apt update -y && sudo apt install git ffmpeg -y
     ```  
 ---
 
