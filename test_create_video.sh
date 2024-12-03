@@ -2,7 +2,10 @@
 export XDG_RUNTIME_DIR=/run/user/$(id -u)
 
 # Estimated speed to process videos
-PROCESS_SPEED=4.6
+PROCESS_SPEED=4.8
+
+# Example subfolder
+EXAMPLE_DIR="example"
 
 # Get the configuration file from the argument, default to ./config.txt
 CONFIG_FILE=${1:-./config.txt}
@@ -29,8 +32,9 @@ if [ -z "$OUTPUT_VIDEO_FPS" ] || [ -z "$SNAPS_DIR" ] || [ -z "$VIDEO_DIR" ]; the
 fi
 
 # Expand tilde (~) in directory paths
-SNAPS_DIR=$(eval echo "$SNAPS_DIR")
+SNAPS_DIR=$(eval echo "$SNAPS_DIR/$EXAMPLE_DIR")
 VIDEO_DIR=$(eval echo "$VIDEO_DIR")
+echo "$SNAPS_DIR"
 
 # Ensure the video directory exists
 mkdir -p "$VIDEO_DIR" || { echo "Failed to create video directory $VIDEO_DIR"; exit 1; }
@@ -66,12 +70,6 @@ if [ "$FILE_COUNT" -gt 0 ]; then
     TIMESTAMP_END=$(date +"%Y-%m-%d %H:%M:%S")
     echo "FFMPEG completed: $TIMESTAMP_END"
     echo "Video saved to $OUTPUT_VIDEO"
-
-    TARGET_DIR="$SNAPS_DIR/$TIMESTAMP"
-    mkdir -p "$TARGET_DIR" || { echo "Failed to create directory $TARGET_DIR"; exit 1; }
-    mv -f "$SNAPS_DIR"/*.jpg "$TARGET_DIR"/ || { echo "Failed to move snapshots"; exit 1; }
-
-    echo "Snapshots moved to $TARGET_DIR."
   else
     echo "FFMPEG failed. Video not created." >&2
     exit 1

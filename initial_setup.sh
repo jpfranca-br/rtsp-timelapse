@@ -1,71 +1,61 @@
 #!/bin/bash
 
-# Get the current working directory
-CURRENT_DIR=$(pwd)
-
-# Get the username of the person running this script
-CURRENT_USER=$(whoami)
-
-# Define the service file path
-SERVICE_FILE="/etc/systemd/system/timelapse.service"
+# Define user service directory
 USER_OVERRIDE_DIR="$HOME/.config/systemd/user"
 USER_SERVICE_FILE="$USER_OVERRIDE_DIR/timelapse.service"
 LOGROTATE_FILE="/etc/logrotate.d/timelapse"
 
-# Create the system-wide service file
-echo "Creating system-wide service file"
-sudo bash -c "cat > $SERVICE_FILE" <<EOF
-[Unit]
-Description=Timelapse Capture Service
-After=network.target
+# Get the username of the person running this script and enable linger
+CURRENT_USER=$(whoami)
+sudo loginctl enable-linger $CURRENT_USER
 
-[Service]
-ExecStart=$CURRENT_DIR/capture.sh $CURRENT_DIR/config.txt
-Restart=always
-RestartSec=5
-User=$CURRENT_USER
-WorkingDirectory=$CURRENT_DIR
-Environment="CONFIG_FILE=$CURRENT_DIR/config.txt"
+# Verify lingering is enabled
+if loginctl show-user $CURRENT_USER | grep -q "Linger=yes"; then
+    echo "Lingering successfully enabled for $CURRENT_USER."
+else
+    echo "Failed to enable lingering for $CURRENT_USER."
+fi
 
-# Inherit environment for the user service
-PassEnvironment=HOME USER LOGNAME PATH SHELL
-
-[Install]
-WantedBy=multi-user.target
-EOF
-
-# Reload systemd to register the new system-wide service
-echo "Reloading daemon"
-sudo systemctl daemon-reload
-
-# Configure a user-level service file for no-sudo start/stop
-echo "Creating user-specific service file"
+# Ensure the directory exists
 mkdir -p "$USER_OVERRIDE_DIR"
+
+# Define the current directory and ensure necessary files exist
+CURRENT_DIR=$(pwd)
+if [ ! -f "$CURRENT_DIR/capture.sh" ] || [ ! -f "$CURRENT_DIR/config.txt" ]; then
+    echo "Required files (capture.sh and config.txt) not found in $CURRENT_DIR."
+    exit 1
+fi
+
+# Create the user-level service file
+echo "Creating user-specific service file"
 cat > "$USER_SERVICE_FILE" <<EOF
 [Unit]
 Description=Timelapse Capture Service
 After=network.target
+StartLimitIntervalSec=0
+#StopWhenUnneeded=true
 
 [Service]
 ExecStart=$CURRENT_DIR/capture.sh $CURRENT_DIR/config.txt
 Restart=always
-RestartSec=5
+RestartSec=10
+RemainAfterExit=false
 WorkingDirectory=$CURRENT_DIR
 Environment="CONFIG_FILE=$CURRENT_DIR/config.txt"
-
-# No sudo needed because it's user-specific
 StandardOutput=journal
 StandardError=journal
+
+# Inherit environment for the user service
+PassEnvironment=HOME USER LOGNAME PATH SHELL
 
 [Install]
 WantedBy=default.target
 EOF
 
 # Reload systemd user daemon to register the new service
-echo "Realoading damon again"
+echo "Reloading user systemd daemon"
 systemctl --user daemon-reload
 
-# Configure logrotate for the capture.log file
 echo "Configuring logrotate for $CURRENT_DIR/capture.log"
 sudo bash -c "cat > $LOGROTATE_FILE" <<EOF
 $CURRENT_DIR/capture.log {
@@ -80,7 +70,10 @@ EOF
 
 # Print success message
 echo "###"
-echo "Timelapse service has been created. It is not enabled and not started. Control it yourself."
-echo "System-wide service  : sudo  systemctl  start timelapse.service"
-echo "User-specific service: systemctl --user start timelapse.service"
+echo "Timelapse user-specific service has been created."
+echo "Control it with the following commands:"
+echo "Start  : systemctl --user start timelapse.service"
+echo "Stop   : systemctl --user stop timelapse.service"
+echo "Enable : systemctl --user enable timelapse.service"
+echo "Status : systemctl --user status timelapse.service"
 echo "Logrotate configured for $CURRENT_DIR/capture.log with a max size of 1MB and 5 rotations."
