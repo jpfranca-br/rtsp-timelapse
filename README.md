@@ -75,7 +75,7 @@ Options include:
   ```bash
   systemctl --user stop timelapse.service
   ```
-- Create Video:
+- Stop Service (if running) and Create Video:
   ```bash
   ./create_video.sh
   ```
