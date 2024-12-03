@@ -35,6 +35,6 @@ echo "RTSP Feed : $RTSP"
 echo "Frame rate: $SNAPSHOT_PER_SECOND frame(s) per second..."
 
 ffmpeg -rtsp_transport tcp -err_detect ignore_err -max_delay 10000000 \
--stimeout 10000000 -i "$RTSP" \
+-i "$RTSP" \
 -an -vf fps=$SNAPSHOT_PER_SECOND -q:v 2 -pix_fmt yuvj422p \
 "$SNAPS_DIR/snapshot_$(date +%Y-%m-%d_%H-%M-%S)_%06d.jpg"
