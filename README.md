@@ -22,16 +22,9 @@ This project automates the process of capturing timelapses from an RTSP stream u
 
 ### **System Requirements**
 - **FFmpeg**: Required for snapshots and video creation.
-  - Install on Ubuntu/Debian:
     ```bash
-    sudo apt update && sudo apt install ffmpeg
-    ```
-  - Install on CentOS/Fedora:
-    ```bash
-    sudo yum install ffmpeg  # CentOS
-    sudo dnf install ffmpeg  # Fedora
-    ```
-
+    sudo apt update && sudo apt install git ffmpeg
+    ```  
 ---
 
 ## **Installation**
