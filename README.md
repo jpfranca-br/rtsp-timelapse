@@ -1,7 +1,3 @@
-Based on your provided scripts and updated functionality, here's an improved version of your README file:
-
----
-
 # RTSP Timelapse for Octoprint Integration
 
 ## **Description**
