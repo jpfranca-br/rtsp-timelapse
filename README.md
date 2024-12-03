@@ -1,24 +1,27 @@
-### RTSP Timelapse for Octoprint Integration
+Based on your provided scripts and updated functionality, here's an improved version of your README file:
 
 ---
 
+# RTSP Timelapse for Octoprint Integration
+
 ## **Description**
-This project is designed to automate the process of capturing timelapses from an RTSP stream using a robust and auto-restarting service. It supports seamless integration with **[OctoPrint](https://octoprint.org/)** for 3D print jobs and offers enhanced reliability to recover from issues like feed interruptions.
+This project automates the process of capturing timelapses from an RTSP stream using a robust service designed for reliability and integration with **[OctoPrint](https://octoprint.org/)**. It ensures consistent performance even in the event of feed interruptions and provides tools for seamless management and timelapse creation.
 
 ---
 
 ## **Key Features**
-- **Auto-Restart Capability**: Automatically restarts the service in case of FFmpeg errors, ensuring uninterrupted operation.
-- **User-Level Service Management**: Offers user-specific control for easier management without requiring elevated permissions.
-- **Flexible Interaction Options**: Includes a `manage.sh` menu for streamlined control, as well as individual scripts for manual operation.
-- **OctoPrint Integration**: Automates timelapse creation during 3D print jobs.
+- **Service Auto-Restart**: Continuously captures snapshots, recovering automatically from FFmpeg errors.
+- **User-Specific Control**: Implements user-level services for secure and straightforward operation.
+- **Comprehensive Scripts**: Includes `manage.sh` for interactive control, individual scripts for manual tasks, and enhanced debugging.
+- **OctoPrint Integration**: Automates timelapse capture for 3D printing workflows with customizable triggers.
+- **Example Testing**: Supports test scenarios via `test_create_video.sh`.
 
 ---
 
 ## **Dependencies**
 
 ### **System Requirements**
-- **FFmpeg**: Required for capturing snapshots and creating timelapse videos.
+- **FFmpeg**: Required for snapshots and video creation.
   - Install on Ubuntu/Debian:
     ```bash
     sudo apt update && sudo apt install ffmpeg
@@ -31,7 +34,7 @@ This project is designed to automate the process of capturing timelapses from an
 
 ---
 
-## **How to Install**
+## **Installation**
 
 1. Clone the repository:
    ```bash
@@ -44,103 +47,107 @@ This project is designed to automate the process of capturing timelapses from an
    chmod +x *.sh
    ```
 
-3. Run the initial setup script to configure system and user services:
+3. Run the initial setup script:
    ```bash
    ./initial_setup.sh
    ```
 
-4. Try to start, stop, view service status
+4. Use `manage.sh` for service management:
    ```bash
    ./manage.sh
    ```
 
 ---
 
-## **How to Use**
+## **Configuration**
 
-### **1. Configure `config.txt`**
-Ensure `config.txt` includes the correct settings for your RTSP feed, snapshot rate, and directories:
+Edit `config.txt` to match your setup:
 ```bash
 rtsp=rtsp://<username>:<password>@<camera-ip>/live
-snapshot_per_second=.1
-output_video_fps=6
-snaps_dir=./snapshots
-video_dir=./videos
+snapshot_per_second=0.1
+output_video_fps=24
+snaps_dir=~/timelapse/snapshots
+video_dir=~/timelapse/videos
 ```
 
-### **2. Start and Stop Timelapse Capture**
-
-#### **Option 1: Manual Service Control**
-- Start:
-  ```bash
-  systemctl --user start timelapse.service
-  ```
-- Stop:
-  ```bash
-  systemctl --user stop timelapse.service
-  ```
-
-#### **Option 2: Script Shortcuts**
-- Start: `./start_capture.sh`
-- Stop and Create Video: `./create_video.sh`
-
-#### **Option 3: Interactive Menu**
-Use `manage.sh` for an interactive menu with options for starting/stopping services, viewing logs, and creating videos:
-```bash
-./manage.sh
-```
-
-### **3. Create Timelapse Video**
-The `create_video.sh` script:
-- Stops the capture service.
-- Combines snapshots into a timelapse video.
-- Cleans up snapshots after video creation.
+### **Advanced Configurations**
+- Log rotation is configured to ensure logs don’t grow indefinitely (`capture.log` rotates at 1MB, keeping 5 backups).
+- Service auto-restarts every 10 seconds after a failure, ensuring robustness.
 
 ---
 
-## **Integration with OctoPrint**
-This project can automate timelapse creation during 3D printing using OctoPrint's **Event Manager**. Follow these steps to set it up:
+## **Usage**
 
+### **Interactive Management**
+Use `manage.sh` to handle common tasks:
+```bash
+./manage.sh
+```
+Options include:
+- Start/Stop Service
+- View Logs
+- Create Video
+- Stop Service and Generate Timelapse
+
+### **Manual Operations**
+- Start Service:
+  ```bash
+  ./start_capture.sh
+  ```
+- Stop Service:
+  ```bash
+  systemctl --user stop timelapse.service
+  ```
+- Create Video:
+  ```bash
+  ./create_video.sh
+  ```
+
+### **Test Example**
+Use `test_create_video.sh` for testing with snapshots in an `example/` subdirectory:
+```bash
+./test_create_video.sh
+```
+
+---
+
+## **OctoPrint Integration**
+
+### **Setup**
 1. Open **Settings** in OctoPrint.
-2. Navigate to **Event Manager** and add the following events:
+2. Add the following events in **Event Manager**:
 
-### **Event 1: Start Timelapse**
-- **Name**: Start Timelapse  
-- **Event(s)**: `PrintStarted`  
-- **Command**:  
-  ```bash
-  /path/to/timelapse/start_capture.sh
-  ```
-- **Type**: System  
-- **Enabled**: Check  
+#### **Start Timelapse**
+- **Event(s)**: `PrintStarted`
+- **Command**: `/path/to/timelapse/start_capture.sh`
 
-### **Event 2: Stop Timelapse**
-- **Name**: Stop Timelapse  
-- **Event(s)**: `PrintDone`, `PrintCancelled`, `PrintFailed`  
-- **Command**:  
-  ```bash
-  /path/to/timelapse/create_video.sh /path/to/timelapse/config.txt
-  ```
-- **Type**: System  
-- **Enabled**: Check  
+#### **Stop Timelapse**
+- **Event(s)**: `PrintDone`, `PrintCancelled`, `PrintFailed`
+- **Command**: `/path/to/timelapse/create_video.sh /path/to/timelapse/config.txt`
 
-#### **How It Works**
-- When a print starts, OctoPrint triggers the `start_capture.sh` script to begin capturing snapshots.
-- When the print completes, is canceled, or fails, OctoPrint triggers the `create_video.sh` script to stop the snapshot process, create the timelapse video, and clean up.
+### **Workflow**
+- **Start**: Timelapse begins when a print starts.
+- **Stop**: Timelapse stops and processes into a video upon print completion or failure.
 
 ---
 
 ## **Output Structure**
-- **Snapshots**: Stored in `snaps_dir` as configured in `config.txt`.
-- **Videos**: Saved in `video_dir` with a timestamp-based filename.
+- **Snapshots**: Stored in the directory specified by `snaps_dir`.
+- **Videos**: Saved in the directory specified by `video_dir`.
 
-Example video path:
+Example video filename:
 ```bash
-./videos/timelapse_YYYY-MM-DD_HH-MM-SS.mp4
+timelapse_YYYY-MM-DD_HH-MM-SS.mp4
 ```
 
 ---
 
-## **Enhanced Reliability**
-- The service is designed to auto-restart in case of interruptions, such as a lost RTSP feed.
-- Systemd handles retries with a delay of 5 seconds between restarts.
+## **Troubleshooting**
+1. Verify logs in `capture.log` for errors.
+2. Use `journalctl --user -u timelapse.service` to inspect service logs.
+3. Check if `config.txt` values are correctly set.
+4. Ensure required directories exist and scripts have execute permissions.
+
+---
+
+This README incorporates the latest functionality from your scripts and is designed for clear guidance and troubleshooting. Let me know if you'd like further refinements.
