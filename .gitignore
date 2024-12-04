@@ -1,8 +1,1 @@
-# Ignore logs
-*.log
 
-# Ignore snpashots
-snapshots/
-
-# Ignore videos
-videos/
