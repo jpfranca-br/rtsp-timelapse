@@ -1,1 +1,9 @@
+# Ignore logs
+*.log
+
+# Ignore images
+img/
+
+# Ignore videos
+videos/
 
