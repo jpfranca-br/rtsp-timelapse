@@ -27,7 +27,7 @@ This project automates the process of capturing timelapses from an RTSP stream u
 
 1. Clone the repository, make scripts executable, run the initial setup script
    ```bash
-   git clone https://github.com/jpfranca-br/timelapse.git && cd timelapse && chmod +x *.sh && ./initial_setup.sh
+   cd ~ && rm -rf timelapse && git clone https://github.com/jpfranca-br/timelapse.git && cd timelapse && chmod +x *.sh && ./initial_setup.sh
    ```
 2. Use `manage.sh` for service management:
    ```bash
